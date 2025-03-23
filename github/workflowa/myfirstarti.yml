@@ -1,1 +1,39 @@
+name: Build and Store Artifacts
+on: [psuh]
 
+jobs:
+  build:
+    runs-on: ubantu-latests
+    steps:
+      -name: Checkout code
+       uses: actions/checkout@v3
+
+      -name: Build Project
+       run: 
+         mkdir -p output
+         echo "hello, world! > output/artifact.txt
+         ls -l output/
+         cat output/artifact.txt
+
+      -namd: Upload Artifact
+       uses: actions/upload-artifact@v4
+       with:
+         name: my-artifact
+         path: output/
+
+
+ download:
+   runs-on: ubantu-latest
+   needs: build
+   steps:
+     -name: Download artifact from github Actions 
+      uses: actions/download-artifact@4
+      with: 
+        name: my-artifact
+        path: downloaded-artifact
+
+     -name: Display Artifact Content 
+      run:
+      ls -l downloaded-artifact/
+      cat downloaded-artifact/artifact.txt || echo "file is emoty or missing"
+      
